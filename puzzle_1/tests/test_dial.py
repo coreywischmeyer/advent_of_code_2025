@@ -50,6 +50,27 @@ def test_multiple_instructions_2():
             print(f"The dial is rotated {instruction.instruction} to point at {dial.position}")
         assert dial.position == 32
 
+def test_random():
+    dial = Dial(100, 0)
+    dial.turn(Instruction("L5"))
+    assert dial.position == 95
+    dial.turn(Instruction("R5"))
+    assert dial.position == 0
+    dial.turn(Instruction("L1"))
+    assert dial.position == 99
+
+def test_five_dial():
+    d = Dial(5, 0)
+    i1 = Instruction("R5")
+    d.turn(i1)
+    assert d.position == 0
+
+def test_large_numbers():
+    d = Dial(100, 85)
+    i1 = Instruction("L685")
+    d.turn(i1)
+    assert d.position == 0
+
 def test_dial_with_two_positions_left():
     dial = Dial(2, 0)
     i1 = Instruction("L2")

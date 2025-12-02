@@ -27,18 +27,18 @@ class Dial:
 
     def turn(self, instruction: Instruction):
         """Turn the dial."""
-        if instruction.direction is 'R':
+        if instruction.direction == 'R':
             if instruction.number + self.position > self.max_number:
                 self.position = (instruction.number + self.position) % self.total_positions
             else:
                 self.position = instruction.number + self.position
-        if instruction.direction is 'L':
+        if instruction.direction == 'L':
             if (self.position - instruction.number) < 0:
-                x = (((instruction.number - self.position) % self.max_number))
+                x = (((instruction.number - self.position) % self.total_positions))
                 if x == 0:
                     self.position = x
                 else:
-                    self.position = self.total_positions - (((instruction.number - self.position) % self.max_number))
+                    self.position = self.total_positions - x
             else:
                 self.position = self.position - instruction.number
 
@@ -49,4 +49,15 @@ class Dial:
             raise ValueError(f"Dial start number {self.initial_number} is not between 0 and {self.max_number}")
 
 if __name__ == '__main__':
-    pass
+    with open('data/puzzle_1.input.txt', 'r') as f:
+        instructions = [Instruction(x.strip()) for x in f.readlines()]
+    d = Dial(100, 50)
+    zero_count = 0
+    instruction_num = 0
+    for instruction in instructions:
+        instruction_num += 1
+        d.turn(instruction)
+        print(f"{instruction_num}: The dial is rotated {instruction.instruction} to point at {d.position}")
+        if d.position == 0:
+            zero_count += 1
+    print(zero_count)
