@@ -18,24 +18,27 @@ class Instruction:
 
 class Dial:
     """Dial."""
-    def __init__(self, max_number, initial_number):
+    def __init__(self, dial_positions, initial_number):
         self.initial_number = initial_number
-        self.max_number = max_number
+        self.max_number = dial_positions - 1
         self.validate()
-        self.total_positions = max_number + 1
+        self.total_positions = dial_positions
         self.position = self.initial_number
 
     def turn(self, instruction: Instruction):
         """Turn the dial."""
         if instruction.direction is 'R':
             if instruction.number + self.position > self.max_number:
-                self.position = (instruction.number % self.max_number) - 1
-            else: 
+                self.position = (instruction.number + self.position) % self.total_positions
+            else:
                 self.position = instruction.number + self.position
         if instruction.direction is 'L':
             if (self.position - instruction.number) < 0:
-                x = (abs(instruction.number - self.position) % self.max_number) - 1
-                self.position =  self.max_number - x
+                x = (((instruction.number - self.position) % self.max_number))
+                if x == 0:
+                    self.position = x
+                else:
+                    self.position = self.total_positions - (((instruction.number - self.position) % self.max_number))
             else:
                 self.position = self.position - instruction.number
 
